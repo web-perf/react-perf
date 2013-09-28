@@ -15,57 +15,17 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		copy: {
-			bower: {
-				files: [{
-					expand: true,
-					cwd: 'bower_components/',
-					src: '**',
-					dest: 'dist/bower_components/'
-				}]
-			},
-			html: {
-				files: [{
-					expand: true,
-					cwd: 'src/',
-					src: '**/*.html',
-					dest: 'dist/'
-				}]
-			},
-			jsx: {
-				files: [{
-					expand: true,
-					cwd: 'src/',
-					src: '**/*.jsx',
-					dest: 'dist/'
-				}]
-			}
-		},
-		less: {
-			options: {
-				report: true
-			},
-			files: {
-				'dist/css/main.less': 'src/**/*.less'
-			}
-		},
 		watch: {
-			htmlcopy: {
-				files: ['src/**/*.html'],
-				tasks: ['copy:html']
+			options: {
+				livereload: true
 			},
-			jsxcopy: {
-				files: ['src/**/*.jsx'],
-				tasks: ['copy:jsx']
-			},
-			less: {
-				files: ['src/**/*.less'],
-				tasks: ['less']
+			all: {
+				files: ['**'],
+				tasks: ['']
 			}
 		},
 		clean: ['dist']
 	});
 
-	grunt.registerTask('default', ['clean', 'copy', 'less']);
-	grunt.registerTask('dev', ['default', 'connect', 'watch']);
+	grunt.registerTask('default', ['connect', 'watch']);
 };

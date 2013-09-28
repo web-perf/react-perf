@@ -1,0 +1,13 @@
+{
+   "_id": "_design/data",
+   "language": "javascript",
+   "views": {
+       "stats": {
+           "reduce": "_stats",
+           "map": "function(doc) {for (var key in doc){val=parseFloat(doc[key]);if (key !== '_id' && key !== '_rev' && !isNaN(val)){emit([doc.component,key, doc.version], val);}}}"
+       },
+       "data": {
+           "map": "function(doc){emit(doc.component, doc);}"
+       }
+   }
+}
