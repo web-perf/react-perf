@@ -1,0 +1,39 @@
+{
+  "name": "react-components-perf",
+  "version": "0.0.0",
+  "description": "Performance analysis for react components",
+  "main": "index.js",
+  "dependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-connect": "~0.5.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-less": "~0.7.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "browser-launcher": "~0.3.4",
+    "express": "~3.4.0",
+    "commander": "~2.0.0"
+  },
+  "devDependencies": {
+    "nodeunit": "~0.8.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axemclion/react-components-perf"
+  },
+  "keywords": [
+    "reachtjs",
+    "react",
+    "telemetry",
+    "performance",
+    "talos"
+  ],
+  "author": "Parashuram <code@r.nparashuram.com>",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/axemclion/react-components-perf/issues"
+  }
+}
