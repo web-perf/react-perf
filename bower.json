@@ -1,0 +1,24 @@
+{
+  "name": "react-components",
+  "version": "0.0.0",
+  "authors": [
+    "Parashuram <code@nparashuram.com>"
+  ],
+  "main": "Gruntfile.js",
+  "keywords": [
+    "react"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "~0.4.1",
+    "topcoat": "~0.7.5"
+  }
+}
