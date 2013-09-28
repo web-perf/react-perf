@@ -1,36 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="http://fb.me/react-0.4.1.js"></script>
-  <script src="http://fb.me/JSXTransformer-0.4.1.js"></script>
-  <style>
-    .commentBox {
-      box-shadow: 0 0 50px 50px RED;
-      margin: 80px;
-      border-radius: 50px;
-
-    }
-  </style>
+  <script src="tests/bundle.js" type = "text/javascript"></script>
 </head>
 <body>
-  <div id="content"></div>
-  <script type="text/jsx">
-    /** @jsx React.DOM */
-    var CommentBox = React.createClass({
-      render: function() {
-        return (
-          <div class="commentBox">
-            Hello, world! I am a CommentBox.
-          </div>
-        );
-      }
-    });
+  <script type="text/javascript">
+    require('es5-shim/es5-shim.js');
+    require('es5-shim/es5-sham.js');
+    var React = require('React');
+    var ReactMount = require('ReactMount');
 
-    for (var i = 0; i < 1000; i++){
+    var Component = require('react-page/src/elements/VectorWidget/VectorWidget.js');
+    ReactMount.allowFullPageRender = true;
+
+    for (var i  = 0; i < 10; i++){
       var x = document.createElement('div');
       document.body.appendChild(x);
-      React.renderComponent(<CommentBox/>,x );
+      React.renderComponent(Component({"requestParams":{}}), x);
     }
+    
   </script>
 </body>
 </html>
