@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>Bootstrap - Performance analysis</title>
+	<title>Reactjs - Performance analysis</title>
 	<link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"/>
 	<link rel="stylesheet" type="text/css" href="lib/jqplot/jquery.jqplot.css" />
  	<script src="http://fb.me/react-0.4.1.js"></script>
@@ -28,6 +28,10 @@
 
 		#chartDiv{
 			margin-top: 3em;
+		}
+
+		.server-select {
+			margin-bottom: 10px;
 		}
 	</style>
 </head>
@@ -63,26 +67,6 @@
 		<div class = "container head-container">
 			<div class="page-header">
 				<h1>ReactJS components - Performance</h1>
-				<div class = "clearfix hide">
-					<span id = "databaseName" class = "hide">
-						Database located at
-						<a href = "" class = "database" target = "_blank">...</a>
-						(
-						<a href = "#" id = "changeServerLink" title = "If the server is taking too long to load, try a different mirror server to fetch the data">change</a>
-						)
-					</span>
-					<span id = "changeDatabaseName">
-						<form class = "form-inline" role = "form">
-							Database located at
-							<div class = "form-group">
-								<select class = "form-control" id = "changeDBDropdown">
-									<option>http://axemclion.iriscouch.com:5984/</option>
-									<option selected></option>
-								</select>
-							</div>
-						</form>
-					</span>
-				</div>
 			</div>
 		</div>
 		<div class="container results">

@@ -1,7 +1,7 @@
 var server = 'http://localhost:5984/';
 
 
-function getStats(component, metric) {
+function getStats(server, component, metric) {
 	return $.Deferred(function(dfd) {
 		$.getJSON(server + 'react-perf/_design/data/_view/stats', {
 			startkey: JSON.stringify([component, metric]),
