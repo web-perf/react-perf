@@ -22,5 +22,12 @@ program
 	});
 
 program
+	.command('*')
+	.description('Run telemetry for component [component]')
+	.action(function(env){
+		telemetry.run(env)
+	});
+
+program
 	.version('0.0.1')
 	.parse(process.argv);
