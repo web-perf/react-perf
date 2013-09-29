@@ -3,7 +3,7 @@ var server = 'http://localhost:5984/';
 
 function getStats(component, metric) {
 	return $.Deferred(function(dfd) {
-		$.getJSON(server + 'bootstrap-perf/_design/data/_view/stats', {
+		$.getJSON(server + 'react-perf/_design/data/_view/stats', {
 			startkey: JSON.stringify([component, metric]),
 			endkey: JSON.stringify([component, metric, {}]),
 			group: true

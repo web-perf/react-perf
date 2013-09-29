@@ -21,7 +21,7 @@ var Query = React.createClass({
   },
   getInitialState: function(){
     return {
-      metric : 'first_paint (ms)'
+      metric : 'dropped_percent'
     }
   },
   render: function() {
@@ -36,10 +36,12 @@ var Query = React.createClass({
           </div>
           <div class="col-lg-4 pull-right">
             <select class = "form-control" ref = "metric" onChange = {this.handleMetric}>
-                <option>dom_content_loaded_time (seconds)</option>
-                <option defaultValue>first_paint (ms)</option>
-                <option>load_time (seconds)</option>
-                <option>mean_frame_time (ms)</option>
+                <option>mean_frame_time</option>
+                <option defaultValue>dropped_percent</option>
+                <option>total_texture_upload_time</option>
+                <option>dom_content_loaded_time_ms</option>
+                <option>average_commit_time</option>
+                <option>total_texture_upload_time</option>
             </select>
           </div>
         </div>      
