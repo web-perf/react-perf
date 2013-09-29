@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="tests/reactwidgetbundle.js" type = "text/javascript"></script>
+</head>
+<body>
+  <script type = "text/javascript">
+    __COMPONENT__ = "ReactSymbol";
+    __VERSION__ = 0.4;
+  </script>
+  <script type="text/javascript">
+    require('es5-shim/es5-shim.js');
+    require('es5-shim/es5-sham.js');
+    var React = require('React');
+    var ReactMount = require('ReactMount');
+
+    var Component = require('react-page/src/elements/ReactSymbol/ReactSymbol.js');
+    ReactMount.allowFullPageRender = true;
+
+    for (var i  = 0; i < 10; i++){
+      var x = document.createElement('div');
+      document.body.appendChild(x);
+      React.renderComponent(Component({"requestParams":{}}), x);
+    }
+    
+  </script>
+</body>
+</html>

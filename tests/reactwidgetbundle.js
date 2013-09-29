@@ -3113,7 +3113,6 @@ var ReactCompositeComponentMixin = {
       this._pendingForceUpdate = false;
       // Will set `this.props` and `this.state`.
       this._performComponentUpdate(nextProps, nextState, transaction);
-
     } else {
       // If it's determined that a component should not update, we still want
       // to set props and state.
@@ -15808,7 +15807,581 @@ if (!performance || !performance.now) {
 
 var performanceNow = performance.now.bind(performance);
 
-module.exports = performanceNow;});__d('react-page/src/elements/VectorWidget/VectorWidget.js',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
+module.exports = performanceNow;});__d('react-page/src/index.js',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
+ * Copyright 2013 Facebook, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @jsx React.DOM
+ */
+
+var Banner = require('react-page/src/elements/Banner/Banner.js');
+var React = require('React');
+var SiteBoilerPlate = require('react-page/src/core/SiteBoilerPlate.js');
+var ReactSymbol = require('react-page/src/elements/ReactSymbol/ReactSymbol.js');
+
+var index = React.createClass({displayName: 'index',
+  render: function() {
+    return (
+      SiteBoilerPlate(null, 
+        Banner( {bannerMessage:"Welcome to React"}),
+        ReactSymbol(null )
+      )
+    );
+  }
+});
+
+module.exports = index;});__d('react-page/src/elements/Banner/Banner.js',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
+ * Copyright 2013 Facebook, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @jsx React.DOM
+ */
+"use strict";
+
+var React = require('React');
+var BannerStyleRules = require('react-page/src/elements/Banner/BannerStyleRules.js');
+var ReactStyle = require('ReactStyle');
+
+/**
+ * We should support/experiment with modelling css dependencies using the exact
+ * same commonJS resolution, so that we can include CSS files in our React npm
+ * modules. An npm module should include everything needed to work with your
+ * component - and it is impossible to know where your component will be
+ * installed to.
+ *
+ *    // Depends on css from my project - relative paths automatically resolved.
+ *    require('./Banner.css');
+ *
+ *    // Depends on css from dependency 'bootstrap' in package.json
+ *    require('bootstrap/Text-Input.css');
+ *
+ * For now, you have to use {ReactStyle#addRules} to make sure the
+ * index.js page includes the styles that your project depends on directly.
+ * Even in that case, we'll use commonJS resolution for css files as well,
+ * so that if you whitelist things in node_modules for inclusion in your
+ * bundle, the resources in those will be
+ * accessible as well.
+ */
+
+ReactStyle.addRules(BannerStyleRules);
+
+/**
+ * Look at Banner, Michael!
+ */
+var Banner = React.createClass({displayName: 'Banner',
+  getInitialState: function() {
+    return {initialized: false};
+  },
+
+  componentDidMount: function() {
+    this.setState({initialized: true});
+  },
+
+  render: function() {
+
+    var classes = [
+      BannerStyleRules.banner,
+      this.state.initialized ? BannerStyleRules.fadeIn : ''
+    ].join(' ');
+    return (
+      React.DOM.h1( {className:classes}, 
+        this.props.bannerMessage
+      )
+    );
+  }
+});
+
+module.exports = Banner;});__d('react-page/src/elements/Banner/BannerStyleRules.js',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
+ * Copyright 2013 Facebook, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+"use strict";
+
+var ReactStyle = require('ReactStyle');
+
+var BannerStyleRules = ReactStyle.create({
+  'h1.banner': {
+    opacity: '0',
+    fontFamily: 'Helvetica',
+    color: '#444',
+    fontWeight: 'bold',
+    marginTop: '60px',
+    marginBottom: '0',
+    textAlign: 'center',
+    '-webkit-user-select': 'none',
+    fontSize: '5vh', /* Chrome bug prevents resizing on window resize! */
+    width: '100%'    /* Putting width 100% causes repaint on resize */
+  },
+  'h1.banner.fadeIn': {
+    opacity: '1',
+    transition: 'opacity 3s ease-in'
+  }
+});
+
+module.exports = BannerStyleRules;});__d('ReactStyle',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
+ * @providesModule ReactStyle
+ */
+
+var ReactStyleRules = require('ReactStyleRules');
+var ReactStyleRulesManager = require('ReactStyleRulesManager');
+
+/**
+ * @constructor
+ */
+function ReactStyle() {
+  // Stylesheet has limits in Internet Explorer 8 and 9 so we need to
+  // shard style rules into several stylesheets.
+  // 1. A sheet may contain up to 4095 rules.
+  // 2. A sheet may @import up to 31 sheets
+  // See http://bit.ly/mARqBv
+  this._rulesManager = new ReactStyleRulesManager(4095, 31);
+  this._listenersMap = {};
+  this._changeEvent = {target: this, type: 'change'};
+}
+
+/**
+ * @param {object} rulesMap
+ * @return {ReactStyleRules}
+ */
+ReactStyle.prototype.create = function(rulesMap) {
+  return new ReactStyleRules(rulesMap);
+};
+
+/**
+ * @param {ReactStyleRules} styleRules
+ * @return {ReactStyle}
+ */
+ReactStyle.prototype.addRules = function(styleRules) {
+  if (this._rulesManager.addRules(styleRules)) {
+    this.dispatchEvent(this._changeEvent);
+  }
+  return this;
+};
+
+/**
+ * @return {array<object>}
+ */
+ReactStyle.prototype.renderToComponents = function() {
+  return this._rulesManager.renderToComponents();
+};
+
+/**
+ * Implements W3C {EventTarget} interface
+ * @param {string} type
+ * @param {function|EventListener}
+ */
+ReactStyle.prototype.addEventListener = function(type, listener) {
+  var listeners = this._listenersMap[type] || [];
+  if (listeners.indexOf(listener) < 0) {
+    listeners.push(listener);
+  }
+  this._listenersMap[type] = listeners;
+};
+
+/**
+ * Implements W3C {EventTarget} interface
+ * @param {string} type
+ * @param {function|EventListener}
+ */
+ReactStyle.prototype.removeEventListener = function(type, listener) {
+  var listeners = this._listenersMap[type];
+  if (listeners) {
+    var idx = listeners.indexOf(listener);
+    if (idx > -1) {
+      listener.splice(listener);
+    }
+  }
+};
+
+/**
+ * Implements W3C {EventTarget} interface
+ * @param {object} evt
+ * @return {boolean}
+ */
+ReactStyle.prototype.dispatchEvent = function(evt) {
+  var type = evt.type;
+  var listeners = this._listenersMap[type];
+  if (listeners) {
+    for (var i = 0, j = listeners.length; i < j; i++) {
+      var handler = listeners[i];
+      if (handler.handleEvent) {
+        handler.handleEvent.call(this, evt);
+      } else {
+        handler.call(this, evt);
+      }
+    }
+  }
+  return true;
+};
+
+
+// Export the singleton instance.
+module.exports = new ReactStyle();});__d('ReactStyleRules',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
+ * @providesModule ReactStyleRules
+ */
+
+'use strict'
+
+/**
+ * @type {RegExp}
+ */
+var CLASSNAME_SELECTOR_PATTERN = /(\.)([a-zA-Z_\-][a-zA-Z_\-\d]*)/ig;
+
+/**
+ * @type {RegExp}
+ */
+var HYPHENATE_PATTERN = /([a-z])([A-Z])/g;
+
+/**
+ * @type {number}
+ */
+var _namespaceID = 0;
+
+/**
+ * @param {object} rulesMap
+ * @constructor
+ */
+function ReactStyleRules(rulesMap) {
+  var namespace = '\u00AE' + (_namespaceID++) + '_';
+  var i = 0;
+  var rules = [];
+  var replacer = namespaceReplacer.bind(null, this, namespace);
+  for (var selectors in rulesMap) {
+    var ruleText = namespacify(selectors, replacer) + '{';
+    var declarations = rulesMap[selectors];
+    for (var property in declarations) {
+      var value = declarations[property];
+      ruleText += hyphenate(property) + ':' + value + ';';
+    }
+    ruleText += '}';
+    rules[i] = ruleText;
+    i++;
+  }
+
+  this._rules = rules;
+  this._namespace = namespace;
+  this.length = rules.length;
+}
+
+/**
+ * @return {string}
+ */
+ReactStyleRules.prototype.toString = function() {
+  return this._rules.join('\n');
+};
+
+/**
+ * @param {string} str
+ * @param {string} newSubStr
+ * @return {string}
+ */
+function namespacify(str, newSubStr) {
+  return str.replace(CLASSNAME_SELECTOR_PATTERN, newSubStr);
+}
+
+/**
+ * @param {object} classNameMap
+ * @param {string} namespace
+ * @param {string} m1
+ * @param {string} m2
+ * @param {string} className
+ * @return {string}
+ */
+function namespaceReplacer(classNameMap, namespace, m1, m2, className) {
+  var newClassName = namespace + className;
+  classNameMap[className] = newClassName;
+  return '.' + newClassName;
+}
+
+/**
+ * @param {string} str
+ * @return {string}
+ */
+function hyphenate(str) {
+  return str.replace(HYPHENATE_PATTERN, '$1-$2').toLowerCase();
+}
+
+module.exports = ReactStyleRules;});__d('ReactStyleRulesManager',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
+ * @providesModule ReactStyleRulesManager
+ * @jsx React.DOM
+ */
+
+'use strict'
+
+var React = require('React');
+var ReactStyleRules = require('ReactStyleRules');
+
+/**
+ * @param {number} maxRulesLengthPerStyle
+ * @param {number} maxComponentsLength
+ * @constructor
+ */
+function ReactStyleRulesManager(maxRulesLengthPerStyle, maxComponentsLength) {
+  /**
+   * @type {array<ReactStyleRules>}
+   */
+  this._styleRulesList = [];
+
+  /**
+   * @type {number}
+   */
+  this._maxRulesLengthPerStyle = maxRulesLengthPerStyle;
+
+  /**
+   * @type {number}
+   */
+  this._maxComponentsLength = maxComponentsLength;
+}
+
+/**
+ * @param {ReactStyleRules} styleRules
+ * @return {boolean}
+ */
+ReactStyleRulesManager.prototype.addRules = function(styleRules) {
+  if (!styleRules || styleRules.constructor !== ReactStyleRules) {
+    throw new Error('Invalid rules');
+  }
+  var styleRulesList = this._styleRulesList;
+  for (var i = 0, j = styleRulesList.lenth; i < j; i++) {
+    var anotherReactStyleRules = styleRulesList[i];
+    if (anotherReactStyleRules === styleRules) {
+      return false;
+    }
+  }
+  styleRulesList.push(styleRules);
+  return true;
+};
+
+
+/**
+ * @return {array<object>}
+ */
+ReactStyleRulesManager.prototype.renderToComponents = function() {
+  var styleRulesList = this._styleRulesList;
+  var components = [];
+  var cssText = '';
+  var rulesCount = 0;
+  var index = 0;
+  var maxRulesLengthPerStyle = this._maxRulesLengthPerStyle;
+  var maxComponentsLength = this._maxComponentsLength;
+
+  for (var i = 0, j = styleRulesList.length; i < j; i++) {
+    var styleRules = styleRulesList[i];
+    var newRulesCount = rulesCount + styleRules.length;
+    if (newRulesCount > maxRulesLengthPerStyle) {
+      if (cssText) {
+        components.push(
+          React.DOM.style(
+            {key:'s' + (index++),
+            dangerouslySetInnerHTML:{__html: cssText}}
+          )
+        );
+        cssText = '';
+        rulesCount = 0;
+      }
+    } else {
+      rulesCount = newRulesCount;
+      cssText += styleRules.toString();
+    }
+  }
+
+  if (cssText) {
+    components.push(
+      React.DOM.style(
+        {key:'s' + (index++),
+        dangerouslySetInnerHTML:{__html: cssText}}
+      )
+    );
+    cssText = null;
+  }
+
+  if (components.lenth > maxComponentsLength) {
+    throw new Error('Too many styles');
+  }
+
+  return components;
+}
+
+module.exports = ReactStyleRulesManager;
+});__d('react-page/src/core/SiteBoilerPlate.js',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
+ * Copyright 2013 Facebook, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @jsx React.DOM
+ */
+
+var React = require('React');
+var ReactStyle = require('ReactStyle');
+var ReactStyleHead = require('ReactStyleHead');
+var SiteBoilerPlateStyleRules = require('react-page/src/core/SiteBoilerPlateStyleRules.js');
+
+/**
+ * We should support/experiment with modelling css dependencies using the exact
+ * same commonJS resolution, so that we can include CSS files in our React npm
+ * modules. An npm module should include everything needed to work with your
+ * component - and it is impossible to know where your component will be
+ * installed to.
+ *
+ *    // Depends on css from my project - relative paths automatically resolved.
+ *    require('./SiteBoilerPlate.css');
+ *
+ *    // Depends on css from dependency 'bootstrap' in package.json
+ *    require('bootstrap/Text-Input.css');
+ *
+ * For now, you have to use {ReactStyle#addRules} to make sure the
+ * index.js page includes the styles that your project depends on directly.
+ * Even in that case, we'll use commonJS resolution for css files as well,
+ * so that if you whitelist things in node_modules for inclusion in your
+ * bundle, the resources in those will be
+ * accessible as well.
+ */
+
+/**
+ * Component for performing some redundant site wrapping. Customize to your
+ * liking, or create a new, similar module. `react-page` automatically ensures
+ * that all fo the JavaScript used to generate the page, will be bundled and
+ * sent into the response so that all the event handlers will work.
+ *
+ * Usage:
+ *
+ * var React = require('React');
+ * var SiteBoilerPlate = require('./components/SiteBoilerPlate.jsx');
+ * var MyPage = React.createClass({
+ *   render: function() {
+ *     return (
+ *       <SiteBoilerPlate>
+ *          <div>Hello This Is My App!</div>
+ *       </SiteBoilerPlate>
+ *     );
+ *   }
+ * });
+ */
+
+ReactStyle.addRules(SiteBoilerPlateStyleRules);
+
+var SiteBoilerPlate = React.createClass({displayName: 'SiteBoilerPlate',
+  render: function() {
+    return (
+      React.DOM.html(null, 
+        ReactStyleHead(null , 
+          React.DOM.meta( {charset:"UTF-8"} ),
+          React.DOM.title(null, "React Page | Client-Server JavaScript Rendering"),
+          React.DOM.meta(
+            {name:"viewport",
+            content:"width=device-width, initial-scale=1.0, user-scalable=no"}
+          )
+        ),
+        React.DOM.body(null, 
+          this.props.children
+        )
+      )
+    );
+  }
+});
+
+module.exports = SiteBoilerPlate;});__d('ReactStyleHead',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
+ * @providesModule ReactStyleHead
+ * @jsx React.DOM 
+ */
+
+'use strict'
+
+var React = require('React');
+var ReactStyle = require('ReactStyle');
+
+var ReactStyleHead = React.createClass({displayName: 'ReactStyleHead',
+  componentDidMount: function() {
+    ReactStyle.addEventListener('change', this.handleStyleChange);
+  },
+
+  componentWillUnmount: function() {
+    ReactStyle.removeEventListener('change', this.handleStyleChange);
+  },
+
+  handleStyleChange: function() {
+    this.forceUpdate();
+  },
+
+  render: function() {
+    return this.transferPropsTo(
+      React.DOM.head(null, 
+        this.props.children,
+        ReactStyle.renderToComponents()
+      )
+    );
+  }
+});
+
+module.exports = ReactStyleHead;});__d('react-page/src/core/SiteBoilerPlateStyleRules.js',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
+ * Copyright 2013 Facebook, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+"use strict";
+
+var ReactStyle = require('ReactStyle');
+
+var SiteBoilerPlateStyleRules = ReactStyle.create({
+  '*': {
+    boxSizing: 'border-box'
+  }
+});
+
+module.exports = SiteBoilerPlateStyleRules;});__d('react-page/src/elements/ReactSymbol/ReactSymbol.js',[/* deps */],function(global, require, requireDynamic, requireLazy, module, exports) {  /**
  * Copyright 2013 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15839,7 +16412,7 @@ var BASE_VEL = 0.15;
 /**
  * An animated SVG component.
  */
-var VectorWidget = React.createClass({displayName: 'VectorWidget',
+var ReactSymbol = React.createClass({displayName: 'ReactSymbol',
   /**
    * Initialize state members.
    */
@@ -15854,34 +16427,6 @@ var VectorWidget = React.createClass({displayName: 'VectorWidget',
    * method. Binding of `this.onTick` is not needed because all React methods
    * are automatically bound before being mounted.
    */
-  componentDidMount: function() {
-    this._interval = window.setInterval(this.onTick, 20);
-  },
-
-  componentWillUnmount: function() {
-    window.clearInterval(this._interval);
-  },
-
-  onTick: function() {
-    var nextDegrees = this.state.degrees + BASE_VEL + this.state.velocity;
-    var nextVelocity = this.state.velocity * this.state.drag;
-    this.setState({degrees: nextDegrees, velocity: nextVelocity});
-  },
-  
-  /**
-   * When mousing down, we increase the friction down the velocity.
-   */
-  handleMouseDown: function() {
-    this.setState({drag: MOUSE_DOWN_DRAG});
-  },
-
-  /**
-   * Cause the rotation to "spring".
-   */
-  handleMouseUp: function() {
-    var nextVelocity = Math.min(this.state.velocity + CLICK_ACCEL, MAX_VEL);
-    this.setState({velocity: nextVelocity, drag: MOUSE_UP_DRAG});
-  },
 
   /**
    * This is the "main" method for any component. The React API allows you to
@@ -15898,9 +16443,7 @@ var VectorWidget = React.createClass({displayName: 'VectorWidget',
         height:"100%",
         viewBox:"0 0 700 700",
         version:"1.1",
-        style:{cursor: 'pointer'},
-        onMouseDown:this.handleMouseDown,
-        onMouseUp:this.handleMouseUp}, 
+        style:{cursor: 'pointer'}}, 
         this.renderGraphic(rotationStyle)
       )
     );
@@ -15914,16 +16457,10 @@ var VectorWidget = React.createClass({displayName: 'VectorWidget',
     return (
       React.DOM.g( {fill:"none", stroke:"none"}, 
         React.DOM.g( {transform:"translate(210.000000, 135.000000)"}, 
-          React.DOM.path( {fill:"rgba(0,0,0,0.1)", d:BORDER_PATH} ),
-          React.DOM.path( {fill:"#7BC7BA", d:BG_PATH} ),
-          React.DOM.path( {fill:"#DCDCDC", d:BAR_PATH} ),
-          React.DOM.path( {fill:"#D97B76", d:RED_DOT_PATH}),
-          React.DOM.path( {fill:"#DBBB79", d:YELLOW_DOT_PATH} ),
-          React.DOM.path( {fill:"#A6BD8A", d:GREEN_DOT_PATH}),
           React.DOM.g( {transform:"translate(55, 29)"}, 
             React.DOM.g( {style:rotationStyle}, 
-              React.DOM.path( {fill:"#FFFFFF",  d:CENTER_DOT_PATH}),
-              React.DOM.g( {stroke:"#FFFFFF", strokeWidth:"8"}, 
+              React.DOM.path( {fill:"#444444",  d:CENTER_DOT_PATH}),
+              React.DOM.g( {stroke:"#444444", strokeWidth:"8"}, 
                 React.DOM.path( {d:RING_ONE_PATH} ),
                 React.DOM.path( {d:RING_TWO_PATH, transform:RING_TWO_ROTATE} ),
                 React.DOM.path( {d:RING_THREE_PATH, transform:RING_THREE_ROTATE} )
@@ -15936,12 +16473,6 @@ var VectorWidget = React.createClass({displayName: 'VectorWidget',
   }
 });
 
-var BORDER_PATH = "M3.00191459,4 C1.34400294,4 0,5.34785514 0,7.00550479 L0,220.994495 C0,222.65439 1.34239483,224 3.00191459,224 L276.998085,224 C278.655997,224 280,222.652145 280,220.994495 L280,7.00550479 C280,5.34561033 278.657605,4 276.998085,4 L3.00191459,4 Z M3.00191459,4";
-var BG_PATH = "M3.00191459,1 C1.34400294,1 0,2.34785514 0,4.00550479 L0,217.994495 C0,219.65439 1.34239483,221 3.00191459,221 L276.998085,221 C278.655997,221 280,219.652145 280,217.994495 L280,4.00550479 C280,2.34561033 278.657605,1 276.998085,1 L3.00191459,1 Z M3.00191459,1";
-var BAR_PATH = "M3.00191459,0 C1.34400294,0 0,1.34559019 0,3.00878799 L0,21 C0,21 0,21 0,21 L280,21 C280,21 280,21 280,21 L280,3.00878799 C280,1.34708027 278.657605,0 276.998085,0 L3.00191459,0 Z M3.00191459,0";
-var RED_DOT_PATH = "M12.5,17 C16.0898511,17 19,14.0898511 19,10.5 C19,6.91014895 16.0898511,4 12.5,4 C8.91014895,4 6,6.91014895 6,10.5 C6,14.0898511 8.91014895,17 12.5,17 Z M12.5,17";
-var YELLOW_DOT_PATH = "M31.5,17 C35.0898511,17 38,14.0898511 38,10.5 C38,6.91014895 35.0898511,4 31.5,4 C27.9101489,4 25,6.91014895 25,10.5 C25,14.0898511 27.9101489,17 31.5,17 Z M31.5,17";
-var GREEN_DOT_PATH = "M50.5,17 C54.0898511,17 57,14.0898511 57,10.5 C57,6.91014895 54.0898511,4 50.5,4 C46.9101489,4 44,6.91014895 44,10.5 C44,14.0898511 46.9101489,17 50.5,17 Z M50.5,17";
 var CENTER_DOT_PATH = "M84,105 C92.8365564,105 100,97.8365564 100,89 C100,80.1634436 92.8365564,73 84,73 C75.1634436,73 68,80.1634436 68,89 C68,97.8365564 75.1634436,105 84,105 Z M84,105";
 var RING_ONE_PATH = "M84,121 C130.391921,121 168,106.673113 168,89 C168,71.3268871 130.391921,57 84,57 C37.6080787,57 0,71.3268871 0,89 C0,106.673113 37.6080787,121 84,121 Z M84,121";
 var RING_TWO_PATH = "M84,121 C130.391921,121 168,106.673113 168,89 C168,71.3268871 130.391921,57 84,57 C37.6080787,57 0,71.3268871 0,89 C0,106.673113 37.6080787,121 84,121 Z M84,121";
@@ -15949,5 +16480,5 @@ var RING_THREE_PATH = "M84,121 C130.391921,121 168,106.673113 168,89 C168,71.326
 var RING_TWO_ROTATE = "translate(84.000000, 89.000000) rotate(-240.000000) translate(-84.000000, -89.000000)";
 var RING_THREE_ROTATE = "translate(84.000000, 89.000000) rotate(-300.000000) translate(-84.000000, -89.000000)";
 
-module.exports = VectorWidget;
+module.exports = ReactSymbol;
 });

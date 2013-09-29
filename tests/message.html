@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://fb.me/react-0.4.1.js"></script>
+  <script src="http://fb.me/JSXTransformer-0.4.1.js"></script>
+  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://rawgithub.com/timrwood/moment/2.1.0/min/moment.min.js"></script>
+  <!-- http://medialize.github.io/URI.js/ -->
+  <script src="https://rawgithub.com/vjeux/6529759/raw/26cc7fc53f9f77deba72018cebadad0eda613326/URI.js"></script>
+  <script src="https://rawgithub.com/kvz/phpjs/master/functions/xml/utf8_encode.js"></script>
+  <script src="https://rawgithub.com/kvz/phpjs/master/functions/strings/md5.js"></script>
+</head>
+<body>
+  <script type = "text/javascript">
+    __COMPONENT__ = "message";
+    __VERSION__ = 10
+  </script>
+  <script type="text/jsx">
+/** @jsx React.DOM */
+
+var Timestamp = React.createClass({
+  render: function() {
+    return <span>[{moment.unix(this.props.children).format("HH:mm")}]</span>;
+  }
+});
+
+var Author = React.createClass({
+  render: function() {
+    var name = this.props.children;
+    var color = 'hsl(' + parseInt(md5(name).substr(2, 4), 16) + ', 68%, 35%)';
+    return <span style={{color: color}}>{name}</span>;
+  }
+});
+
+var Content = React.createClass({
+  render: function() {
+    return <span>{this.linkify(this.props.children)}</span>
+  },
+  
+  linkify: function(text) {
+    var split = text.split(URI.find_uri_expression);
+    var result = [];
+    for (var i = 0; i < split.length; ++i) {
+      if (split[i] !== undefined) {
+        if (i + 1 < split.length && split[i + 1] === undefined) {
+          result.push(<a href={split[i]} target="_blank">{split[i]}</a>);
+        } else {
+          result.push(split[i]);
+        }
+      }
+    }
+    return result;
+  }
+});
+
+var Message = React.createClass({
+  shouldComponentUpdate: function() {
+    return false;
+  },
+  
+  render: function() {
+    return (
+      <div>
+        <Timestamp>{this.props.message.ts}</Timestamp>{' '}
+        <Author>{this.props.message.who}</Author>{': '}
+        <Content>{this.props.message.msg}</Content>
+      </div>
+    );
+  }
+});
+
+var MessageList = React.createClass({
+  getInitialState: function() {
+    return { messages: [], isLoading: false };
+  },
+
+  componentDidMount: function(elem) {
+    $.ajax(this.props.url)
+      .done(function(messages) {
+        this.setState({messages: messages});
+      }.bind(this));
+
+    window.addEventListener('scroll', function() {
+      if ($(window).scrollTop() < 300) {
+        this.loadMore();
+      }
+    }.bind(this));
+  },
+
+  loadMore: function() {
+    if (this.state.isLoading) {
+      return;
+    }
+    
+    var uri = URI(this.props.url)
+      .addSearch({before: this.state.messages[0].id})
+      .toString();
+    $.ajax(uri)
+      .done(function(messages) {
+        this.setState({
+          isLoading: false,
+          messages: this.state.messages.concat(messages)
+        });
+      }.bind(this));
+
+    this.setState({ isLoading: true });
+  },
+
+  componentDidUpdate: function(props, state, elem) {
+    var count = elem.children.length;
+
+    if (count !== this.lastCount) {
+      if (elem.offsetHeight < window.innerHeight) {
+        this.loadMore();
+      }
+      if (!this.lastCount) {
+        window.scrollTo(0, elem.offsetHeight);
+      } else {
+        window.scrollTo(
+          document.body.scrollLeft,
+          document.body.scrollTop + (
+            elem.children[count - this.lastCount].getBoundingClientRect().top -
+            elem.getBoundingClientRect().top
+          )
+        );
+      }
+    }
+    
+    this.lastCount = elem.children.length;
+  },
+
+  render: function() {
+    this.state.messages.sort(function(a, b) {
+      return a.id - b.id;
+    });
+
+    return (
+      <div>
+        {this.state.messages.map(function(message) {
+          return <Message message={message} key={message.id} ref={message.id} />;
+        })}
+      </div>
+    );
+  }
+});
+ 
+React.renderComponent(<MessageList url="http://vjeux.com:8001/api/utterances/irc.freenode.net/reactjs" />, document.body);
+
+
+
+ for (var i = 0; i < 10; i++){
+    var x = document.createElement('div');
+    document.body.appendChild(x);
+    React.renderComponent(<MessageList url="http://vjeux.com:8001/api/utterances/irc.freenode.net/reactjs" />,x);
+ }
+
+
+  </script>
+</body>
+</html>
