@@ -1,0 +1,18 @@
+{
+  "name": "react-perf",
+  "version": "1.0.0",
+  "description": "Performance trends in ReactJS",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "node-static": "^0.7.6",
+    "perfjankie": "^2.0.0",
+    "request": "^2.58.0",
+    "rimraf": "^2.4.0"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
+}

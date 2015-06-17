@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="description" content="DBMON REACT" />
+  <meta charset="utf-8">
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <title> React Performance - dbmon  </title>
+  <style>
+    .Query {
+      position: relative;
+    }
+
+    .Query:hover .popover {
+      left: -100%;
+      width: 100%;
+      display: block;
+    }
+</style>
+</head>
+<body>
+  <div id="dbmon"></div>
+
+  <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+  <script src="http://fb.me/react-__VERSION__.min.js"></script>
+  <script type="text/javascript">
+    ENV = {
+      rows : 100,
+      timeout : 0
+    };
+
+    React.renderComponent = React.render || React.renderComponent;
+    document.title = React.version + ' React';
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
