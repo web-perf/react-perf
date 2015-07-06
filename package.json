@@ -1,0 +1,10 @@
+{
+  "name": "react-perf-test-apps",
+  "version": "1.0.0",
+  "description": "Sample application for testing react",
+  "dependencies": {
+    "request": "^2.58.0"
+  },
+  "author": "Parashuram <code@nparashuram.com>",
+  "license": "ISC"
+}
