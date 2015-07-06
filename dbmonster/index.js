@@ -9,6 +9,13 @@ function writeHTML(version, binDir) {
 	fs.writeFileSync(path.join(binDir, 'index.html'), html.replace(/__VERSION__/g, version));
 }
 
+function requireFromString(src, filename) {
+	var Module = module.constructor;
+	var m = new Module();
+	m._compile(src, filename);
+	return m.exports;
+}
+
 function writeScript(version, binDir, cb) {
 	var downloadFile = 'http://fb.me/JSXTransformer-' + version + '.js';
 	request(downloadFile, function(err, res, body) {
@@ -23,18 +30,12 @@ function writeScript(version, binDir, cb) {
 	});
 }
 
-function prepare(binDir, version, cb) {
-	cb = cb || function() {};
-	fs.mkdirSync(binDir);
-	writeHTML(version, binDir);
-	writeScript(version, binDir, cb);
-}
 
-function requireFromString(src, filename) {
-	var Module = module.constructor;
-	var m = new Module();
-	m._compile(src, filename);
-	return m.exports;
-}
-
-module.exports = prepare;
+module.exports = function(version, binDir, cb) {
+	var resultDir = path.join(binDir, 'v' + version)
+	fs.mkdirSync(resultDir);
+	writeHTML(version, resultDir);
+	writeScript(version, resultDir, function() {
+		cb(resultDir);
+	});
+};

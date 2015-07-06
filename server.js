@@ -1,11 +1,20 @@
 #! /usr/local/bin/node
 
+var path = require('path');
+var fs = require('fs');
+var static = require('node-static');
 var prepareDBMonster = require('./dbmonster');
 
-if (process.argv.length !== 4) {
-	console.error('Need to specify version of React and output directory');
-	console.error('Example : ', process.argv[0], process.argv[1], '0.13.0 ./bin');
-	process.exit(1);
+var version = process.argv[2] || '0.13.0';
+var binDir = process.argv[3] || path.join(__dirname, 'bin');
+if (!fs.existsSync(binDir)) {
+	fs.mkdirSync(binDir);
 }
 
-prepareDBMonster(process.argv[3], process.argv[2]);
+prepareDBMonster(version, binDir, function(resultDir) {
+	var server = require('http').createServer(function(request, response) {
+		request.addListener('end', function() {
+			new static.Server(resultDir).serve(request, response);
+		}).resume();
+	}).listen(8080);
+});

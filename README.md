@@ -9,4 +9,4 @@
 
 This branch contains test apps that are used to test the performance regressions of React framework. This branch can be used to generate samples apps for react versions mentioned above. 
 
-To generate sample app, run `npm install` in this folder and then run `npm start <version_to_test> <output_directory>`. 
+To view sample app, run `npm install` in this folder and then run `npm start <version_to_test>`. It starts the sample app at the homepage defined in `package.json` - http://localhost:8080/
