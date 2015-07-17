@@ -17,4 +17,5 @@ prepareDBMonster(version, binDir, function(resultDir) {
 			new static.Server(resultDir).serve(request, response);
 		}).resume();
 	}).listen(8080);
+	console.log('Started server');
 });
