@@ -7,10 +7,14 @@
     "test": "test"
   },
   "dependencies": {
-    "node-static": "^0.7.6",
+    "debug": "^2.2.0",
+    "glob": "^5.0.14",
+    "npm": "^2.13.0",
     "perfjankie": "^2.0.0",
+    "q": "^1.4.1",
     "request": "^2.58.0",
-    "rimraf": "^2.4.0"
+    "rimraf": "^2.4.0",
+    "unzip": "^0.1.11"
   },
   "devDependencies": {},
   "author": "",
