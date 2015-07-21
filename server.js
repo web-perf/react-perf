@@ -7,9 +7,11 @@ var prepareDBMonster = require('./dbmonster');
 
 var version = process.argv[2] || '0.13.0';
 var binDir = process.argv[3] || path.join(__dirname, 'bin');
-if (!fs.existsSync(binDir)) {
+
+
+try {
 	fs.mkdirSync(binDir);
-}
+} catch (e) {}
 
 prepareDBMonster(version, binDir, function(resultDir) {
 	var server = require('http').createServer(function(request, response) {
