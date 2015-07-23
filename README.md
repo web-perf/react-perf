@@ -12,5 +12,8 @@
 
 # Other notes
 
-- To update React versions, change the `.\lib\reactVersions.json` file. 
-- All other test parameters are located in `.\lib\index.js`
+- All other test parameters are located in `.\lib\pjRunner.js`
+- Individual test apps are present at the location specified in `.\lib\reactVersions.js`
+    + The source for the apps are in a branch of this repo
+    + To run the app, the test runner in this branch downloads the branch as a zip from github, does `npm install`, and runs the `server.js`
+    + Once the tests are finished, the server is killed. 
