@@ -17,7 +17,8 @@ function requireFromString(src, filename) {
 }
 
 function writeScript(version, binDir, cb) {
-	var downloadFile = 'http://fb.me/JSXTransformer-' + version + '.js';
+	//var downloadFile = 'http://fb.me/JSXTransformer-' + version + '.js';
+	var downloadFile = 'https://cdnjs.cloudflare.com/ajax/libs/react/' + version + '/JSXTransformer.js'
 	request(downloadFile, function(err, res, body) {
 		if (err) {
 			console.log('ERROR', err);
