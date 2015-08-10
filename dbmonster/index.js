@@ -1,43 +1,53 @@
-var fs = require('fs');
 var path = require('path');
-var request = require('request');
-
-var TEST_APP = path.join(__dirname, './app');
-
-function writeHTML(version, binDir) {
-	var html = fs.readFileSync(path.join(TEST_APP, 'index.html'), 'utf-8');
-	fs.writeFileSync(path.join(binDir, 'index.html'), html.replace(/__VERSION__/g, version));
-}
-
-function requireFromString(src, filename) {
-	var Module = module.constructor;
-	var m = new Module();
-	m._compile(src, filename);
-	return m.exports;
-}
-
-function writeScript(version, binDir, cb) {
-	var downloadFile = 'http://fb.me/JSXTransformer-' + version + '.js';
-	request(downloadFile, function(err, res, body) {
-		if (err) {
-			console.log('ERROR', err);
-			process.exit(1);
-		}
-		var reactTools = requireFromString(body, 'reacttools');
-		var jsx = reactTools.transform(fs.readFileSync(path.join(TEST_APP, 'script.jsx'), 'utf-8'));
-		fs.writeFileSync(path.join(binDir, 'script.js'), jsx.code);
-		cb();
-	});
-}
-
+var fs = require('fs');
+var npm = require('npm');
+var webpack = require('webpack')
 
 module.exports = function(version, binDir, cb) {
-	var resultDir = path.join(binDir, 'v' + version)
+	binDir = path.join(binDir, version)
 	try {
-		fs.mkdirSync(resultDir);
+		fs.mkdirSync(binDir);
 	} catch (e) {}
-	writeHTML(version, resultDir);
-	writeScript(version, resultDir, function() {
-		cb(resultDir);
+
+	npmInstall(version, function() {
+		fs.writeFileSync(path.join(binDir, 'index.html'), fs.readFileSync(path.join(__dirname, 'app/index.html')));
+		pack(binDir, function() {
+			cb(path.join(binDir));
+		});
+	});
+};
+
+function npmInstall(version, cb) {
+	npm.load({
+		prefix: path.resolve(__dirname, '..')
+	}, function(err, npm) {
+		npm.commands.install(['react@' + version, 'react-dom@' + version], cb);
+	});
+};
+
+function pack(binDir, cb) {
+	webpack({
+		entry: [
+			path.join(__dirname, 'app/main.jsx')
+		],
+		output: {
+			path: binDir,
+			filename: 'script.js'
+		},
+		resolve: {
+			extensions: ['', '.js', '.jsx']
+		},
+		module: {
+			loaders: [{
+				test: /\.jsx?$/,
+				exclude: /(node_modules|bower_components)/,
+				loaders: ['babel'],
+			}]
+		},
+		plugins: [
+			new webpack.NoErrorsPlugin()
+		]
+	}, function(err, res) {
+		cb();
 	});
 };

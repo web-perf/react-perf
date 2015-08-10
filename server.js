@@ -5,7 +5,7 @@ var fs = require('fs');
 var static = require('node-static');
 var prepareDBMonster = require('./dbmonster');
 
-var version = process.argv[2] || '0.13.0';
+var version = process.argv[2] || '0.14.0-beta1';
 var binDir = process.argv[3] || path.join(__dirname, 'bin');
 
 
@@ -19,5 +19,5 @@ prepareDBMonster(version, binDir, function(resultDir) {
 			new static.Server(resultDir).serve(request, response);
 		}).resume();
 	}).listen(8080);
-	console.log('Started server');
+	console.log('Started server ' + resultDir);
 });
