@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Performance trends in ReactJS",
   "main": "lib/index.js",
-  "directories": {
-    "test": "test"
-  },
   "dependencies": {
     "debug": "^2.2.0",
     "glob": "^5.0.14",
@@ -18,5 +15,16 @@
   },
   "devDependencies": {},
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "scripts": {
+    "test": "lib/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/web-perf/react-perf.git"
+  },
+  "bugs": {
+    "url": "https://github.com/web-perf/react-perf/issues"
+  },
+  "homepage": "https://github.com/web-perf/react-perf"
 }
