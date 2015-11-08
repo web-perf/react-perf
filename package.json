@@ -5,12 +5,12 @@
   "main": "lib/index.js",
   "dependencies": {
     "debug": "^2.2.0",
-    "glob": "^5.0.14",
-    "npm": "^2.13.0",
-    "perfjankie": "^2.0.2",
+    "glob": "^5.0.15",
+    "npm": "^3.3.10",
+    "perfjankie": "^2.1.0",
     "q": "^1.4.1",
-    "request": "^2.58.0",
-    "rimraf": "^2.4.0",
+    "request": "^2.65.0",
+    "rimraf": "^2.4.3",
     "unzip": "^0.1.11"
   },
   "devDependencies": {},
