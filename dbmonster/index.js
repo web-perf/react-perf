@@ -45,7 +45,12 @@ function pack(binDir, cb) {
 			}]
 		},
 		plugins: [
-			new webpack.NoErrorsPlugin()
+			new webpack.NoErrorsPlugin(),
+			new webpack.DefinePlugin({
+				"process.env": {
+					NODE_ENV: JSON.stringify("production")
+				}
+			})
 		]
 	}, function(err, res) {
 		cb();
