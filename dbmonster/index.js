@@ -33,7 +33,7 @@ function writeScript(version, binDir, cb) {
 
 
 module.exports = function(version, binDir, cb) {
-	var resultDir = path.join(binDir, 'v' + version)
+	var resultDir = path.join(binDir,version)
 	try {
 		fs.mkdirSync(resultDir);
 	} catch (e) {}
