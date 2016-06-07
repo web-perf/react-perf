@@ -5,7 +5,7 @@ var fs = require('fs');
 var static = require('node-static');
 var prepareDBMonster = require('./dbmonster');
 
-var version = process.argv[2] || '0.14.0-beta1';
+var version = process.argv[2] || '0.14.0';
 var binDir = process.argv[3] || path.join(__dirname, 'bin');
 
 
