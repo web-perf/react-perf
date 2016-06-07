@@ -210,5 +210,4 @@ var DBMon = React.createClass({
 });
 
 React.renderComponent(<DBMon />, document.getElementById('dbmon'), function() {
-  console.log(Date.now() - start);
 });
