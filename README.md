@@ -9,6 +9,7 @@
 2. Start up CouchDB and [Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
 3. Run `node .\lib\cli.js` to test all versions of React and store results in the couchdb server
 4. To view results, look at `http://<couchdbServer:5984>/<dbname>/_design/site/index.html`
+5. Update UI for site using `node node_modules/perfjankie/lib/cli.js --couch-database=react-perf --only-update-site --couch-server=http://localhost:5984 --couch-user=admin_user --couch-pwd=admin_pass`
 
 # Other notes
 
