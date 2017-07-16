@@ -2,7 +2,7 @@
 
 var path = require('path');
 var fs = require('fs');
-var static = require('node-static');
+var nodeStatic = require('node-static');
 var prepareDBMonster = require('./dbmonster');
 
 var version = process.argv[2] || '0.13.0';
@@ -16,7 +16,7 @@ try {
 prepareDBMonster(version, binDir, function(resultDir) {
 	var server = require('http').createServer(function(request, response) {
 		request.addListener('end', function() {
-			new static.Server(resultDir).serve(request, response);
+			new nodeStatic.Server(resultDir).serve(request, response);
 		}).resume();
 	}).listen(8080);
 	console.log('Started server');
