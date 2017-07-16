@@ -25,7 +25,8 @@
   "scripts": {
     "build": "node_modules/.bin/babel src --out-dir=out --copy-files",
     "pretest": "npm run build",
-    "test": "node out/cli.js"
+    "test": "node out/cli.js",
+    "site" : "node node_modules/perfjankie/lib/cli.js --couch-database=react-perf --couch-user=admin_user --couch-pwd=admin_pass --only-update-site --couch-server=http://localhost:5984 "
   },
   "repository": {
     "type": "git",
