@@ -6,7 +6,6 @@
   "description": "Sample application for testing react",
   "dependencies": {
     "node-static": "^0.7.7",
-    "npm": "^2.13.4",
     "request": "^2.58.0"
   },
   "license": "ISC",

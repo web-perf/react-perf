@@ -1,6 +1,6 @@
 var path = require('path');
 var fs = require('fs');
-var npm = require('npm');
+var exec = require('child_process').exec;
 var webpack = require('webpack')
 
 module.exports = function(version, binDir, cb) {
@@ -18,12 +18,17 @@ module.exports = function(version, binDir, cb) {
 };
 
 function npmInstall(version, cb) {
-	npm.load({
-		prefix: path.resolve(__dirname, '..')
-	}, function(err, npm) {
-		npm.commands.install(['react@' + version, 'react-dom@' + version], cb);
-	});
-};
+	exec('npm install react@' + version + ' react-dom@' + version, {
+		cwd: path.join(__dirname, '..')
+	}, function (err, stdout, stderr) {
+		if (err) {
+			console.log(err, stderr);
+			process.exit(1);
+		} else {
+			cb()
+		}
+	})
+}
 
 function pack(binDir, cb) {
 	webpack({
