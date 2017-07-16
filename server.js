@@ -11,13 +11,13 @@ var binDir = process.argv[3] || path.join(__dirname, 'bin');
 
 try {
 	fs.mkdirSync(binDir);
-} catch (e) {}
+} catch (e) { }
 
-prepareDBMonster(version, binDir, function(resultDir) {
-	var server = require('http').createServer(function(request, response) {
-		request.addListener('end', function() {
+prepareDBMonster(version, binDir, function (resultDir) {
+	var server = require('http').createServer(function (request, response) {
+		request.addListener('end', function () {
 			new nodeStatic.Server(resultDir).serve(request, response);
 		}).resume();
 	}).listen(8080);
-	console.log('Started server');
+	console.log('Started server for ', version);
 });
